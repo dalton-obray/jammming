@@ -1,7 +1,8 @@
 let userAccessToken;
 let expiresIn = '';
 const clientID='7040b83d72a5426eba5fdf3a313fd905';
-const redirectUri = "http://localhost:3000/";
+const redirectUri = "http://jammming-with-dalton.surge.sh";
+//const redirectUri = "http://localhost:3000/";
 
 const Spotify = {
   getAccessToken(){
