@@ -133,7 +133,7 @@ async savePlaylist(playlistName, trackURIs){
       if(playlistName && trackURIs){
           userAccessToken = this.getAccessToken();
           let userId = await this.getUserId(userAccessToken);
-          let playlistId = await this.createUserPlaylist(userAccessToken, playlistName, userId);
+          let playlistId = await this.createUserPlaylist(userAccessToken, playlistName);
           console.log(`Your User ID is ${userId}.  Your User Access token is ${userAccessToken}.  Your playlistName is ${playlistName}.  Your Playlist ID is ${playlistId}`);
           } else {
         console.log("It didn't work.");
