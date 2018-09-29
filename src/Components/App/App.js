@@ -59,7 +59,6 @@ class App extends Component {
   }
   async search(searchTerm){
     let newSearchResults = await Spotify.search(searchTerm);
-    console.log('here are the search results in App' + newSearchResults);
     this.setState({searchResults : newSearchResults});
   }
   render() {

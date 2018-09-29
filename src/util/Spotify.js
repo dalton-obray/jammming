@@ -28,7 +28,7 @@ const Spotify = {
   },
   async search(searchTerm){
     if(!userAccessToken){
-      this.getAccessToken();
+      userAccessToken = this.getAccessToken();
     }
     //make a GET request to the Spotify search endpoint. If the response is successful, store the items we need in an array and return it
     try {
@@ -82,12 +82,11 @@ const Spotify = {
       }
 },
   async createUserPlaylist(userAccessToken, playlistName){
-    const createPlaylistUrl = "https://api.spotify.com/v1/users/";
     //Create a playlist in the user's account
     try{
       let userId = await this.getUserId(userAccessToken);
       console.log(userId);
-      const createPlaylistEndpoint = `${createPlaylistUrl}${userId}/playlists`;
+      const createPlaylistEndpoint = `https://api.spotify.com/v1/users/${userId}/playlists`;
       const response = await fetch(createPlaylistEndpoint, {
         method: 'POST',
         headers: {'Authorization': `Bearer ${userAccessToken}`, 'Content-Type' : 'application/json'},
