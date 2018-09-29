@@ -81,14 +81,16 @@ const Spotify = {
         console.log(error);
       }
 },
-  async createUserPlaylist(userAccessToken, playlistName, userId){
+  async createUserPlaylist(userAccessToken, playlistName){
     const createPlaylistUrl = "https://api.spotify.com/v1/users/";
     //Create a playlist in the user's account
     try{
+      let userId = await this.getUserId(userAccessToken);
+      console.log(userId);
       const createPlaylistEndpoint = `${createPlaylistUrl}${userId}/playlists`;
       const response = await fetch(createPlaylistEndpoint, {
         method: 'POST',
-        headers: {'Authorization': `Bearer ${userAccessToken}`},
+        headers: {'Authorization': `Bearer ${userAccessToken}`, 'Content-Type' : 'application/json'},
         body: {
           'name' : playlistName
         }
