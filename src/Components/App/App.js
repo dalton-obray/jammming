@@ -56,6 +56,7 @@ class App extends Component {
     let trackURIs = [];
     this.state.playlistTracks.forEach(track => trackURIs.push(track.uri));
     await Spotify.savePlaylist(this.state.playlistName, trackURIs);
+    this.setState({playlistName: 'New Playlist', playlistTracks: []});
   }
   async search(searchTerm){
     let newSearchResults = await Spotify.search(searchTerm);

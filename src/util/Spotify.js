@@ -1,4 +1,4 @@
-let userAccessToken = '';
+let userAccessToken;
 let expiresIn = '';
 const clientID='7040b83d72a5426eba5fdf3a313fd905';
 const redirectUri = "http://localhost:3000/";
@@ -89,10 +89,8 @@ const Spotify = {
       const createPlaylistEndpoint = `https://api.spotify.com/v1/users/${userId}/playlists`;
       const response = await fetch(createPlaylistEndpoint, {
         method: 'POST',
-        headers: {'Authorization': `Bearer ${userAccessToken}`, 'Content-Type' : 'application/json'},
-        body: {
-          'name' : playlistName
-        }
+        headers: {'Authorization' : `Bearer ${userAccessToken}`},
+        body: JSON.stringify({ 'name' : playlistName})
         });
       if (response.ok){
         const jsonResponse = await response.json();
@@ -105,21 +103,20 @@ const Spotify = {
           console.log(error);
       };
   },
-  async addTracksToPlaylist(userAccessToken, playlistId, trackURIs){
+  async addTracksToPlaylist(userAccessToken, playlistName, trackURIs){
     //Add tracks to the new playlist
+      let playlistId = await this.createUserPlaylist(userAccessToken, playlistName);
       const addTrackToPlaylistUrl = "https://api.spotify.com/v1/playlists/";
       try{
         const addTracksEndpoint = `${addTrackToPlaylistUrl}${playlistId}/tracks`;
         const response = await fetch(addTracksEndpoint, {
           method: 'POST',
-          body: {
-            "uris": trackURIs
-          },
-          headers: {'Authorization': `Bearer ${userAccessToken}`, 'Content-Type': 'application/json'}
+          body: JSON.stringify({"uris": trackURIs}),
+          headers: {'Authorization': `Bearer ${userAccessToken}`}
           });
         if (response.ok){
           const jsonResponse = await response.json();
-          let playlistSnapshotId = jsonResponse.id;
+          let playlistSnapshotId = jsonResponse.snapshot_id;
           return playlistSnapshotId;
         } else {
             throw new Error('Add Track Request Failed!');
@@ -131,8 +128,9 @@ const Spotify = {
 async savePlaylist(playlistName, trackURIs){
       if(playlistName && trackURIs){
           userAccessToken = this.getAccessToken();
-          let playlistId = await this.createUserPlaylist(userAccessToken, playlistName);
-          console.log(`Your User Access token is ${userAccessToken}.  Your playlistName is ${playlistName}.  Your Playlist ID is ${playlistId}`);
+          //let playlistId = await this.createUserPlaylist(userAccessToken, playlistName);
+          let playlistSnapshotId = await this.addTracksToPlaylist(userAccessToken, playlistName, trackURIs);
+          console.log(`Your User Access token is ${userAccessToken}.  Your playlistName is ${playlistName}. Your Playlist Snapshot Id is ${playlistSnapshotId}.`);
           } else {
         console.log("It didn't work.");
         return null;
